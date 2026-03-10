@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daraz Load - Mobile Recharge</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.daraz-bg{
+background:linear-gradient(135deg,#f57224 0%,#c5521e 100%);
+}
+
+.success-overlay{
+display:none;
+position:fixed;
+top:0;left:0;right:0;bottom:0;
+background:rgba(0,0,0,0.5);
+z-index:1000;
+justify-content:center;
+align-items:center;
+}
+
+.checkmark{
+width:80px;height:80px;
+border-radius:50%;
+display:block;
+stroke-width:5;
+stroke:#fff;
+margin:0 auto;
+box-shadow:0 0 0 rgba(52,211,153,.4);
+animation:fill .4s ease-in-out .4s forwards,scale .3s ease-in-out .9s both;
+}
+
+.checkmark__circle{
+stroke-dasharray:166;
+stroke-dashoffset:166;
+stroke:#10B981;
+fill:none;
+animation:stroke .6s cubic-bezier(.65,0,.45,1) forwards;
+}
+
+.checkmark__check{
+transform-origin:50% 50%;
+stroke-dasharray:48;
+stroke-dashoffset:48;
+animation:stroke .3s cubic-bezier(.65,0,.45,1) .8s forwards;
+}
+
+@keyframes stroke{100%{stroke-dashoffset:0}}
+@keyframes scale{50%{transform:scale3d(1.1,1.1,1)}}
+@keyframes fill{100%{box-shadow: inset 0 0 0 1000px #10B981}}
+</style>
+</head>
+
+<body class="bg-gray-50">
+
+<!-- SUCCESS POPUP -->
+
+<div id="successOverlay" class="success-overlay flex">
+
+<div class="bg-white p-8 rounded-xl max-w-md w-full mx-4 text-center">
+
+<img src="https://discover.daraz.com/images/Group_1083-1644460875.svg" class="h-10 mx-auto mb-4">
+
+<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+<circle class="checkmark__circle" cx="26" cy="26" r="25"/>
+<path class="checkmark__check" fill="none" d="M14 27l7 7 17-17"/>
+</svg>
+
+<h2 class="text-2xl font-bold mt-5">Recharge Successful</h2>
+<p class="text-gray-600 mb-5">Your mobile load has been completed.</p>
+
+<div class="bg-gray-50 p-4 rounded text-left mb-6">
+
+<div class="flex justify-between mb-2">
+<span>Mobile Number</span>
+<span id="successNumber"></span>
+</div>
+
+<div class="flex justify-between mb-2">
+<span>Operator</span>
+<span id="successCompany"></span>
+</div>
+
+<div class="flex justify-between mb-2">
+<span>Amount</span>
+<span id="successAmount"></span>
+</div>
+
+<div class="flex justify-between">
+<span>Reference</span>
+<span id="successRef"></span>
+</div>
+
+</div>
+
+<button onclick="closeSuccess()" class="daraz-bg text-white w-full py-3 rounded-lg font-semibold">
+Back
+</button>
+
+</div>
+</div>
+
+<!-- HEADER -->
+
+<header class="daraz-bg text-white py-6 shadow-lg">
+<div class="container mx-auto px-4 flex justify-between items-center">
+
+<div class="flex items-center space-x-2">
+<img src="https://discover.daraz.com/images/Group_1083-1644460875.svg" class="h-10">
+<h1 class="text-2xl font-bold">Daraz Load</h1>
+</div>
+
+<a href="https://wa.me/+923314712909" class="hover:text-orange-200">
+Contact WhatsApp
+</a>
+
+</div>
+</header>
+
+
+<!-- MAIN -->
+
+<main class="container mx-auto px-4 py-12">
+
+<div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
+
+<h2 class="text-3xl font-bold mb-6">Mobile Load / Recharge</h2>
+
+
+<div class="space-y-6">
+
+<div>
+<label class="block mb-2 font-medium">Mobile Number</label>
+<input id="number" type="text" placeholder="03XXXXXXXXX"
+class="w-full px-4 py-3 border rounded-lg">
+</div>
+
+
+<div>
+<label class="block mb-2 font-medium">Select Network</label>
+
+<select id="provider"
+class="w-full px-4 py-3 border rounded-lg">
+
+<option value="">Select Network</option>
+<option>Jazz</option>
+<option>Zong</option>
+<option>Telenor</option>
+<option>Ufone</option>
+
+</select>
+
+</div>
+
+
+<div>
+<label class="block mb-2 font-medium">Amount (PKR)</label>
+
+<div class="relative">
+<span class="absolute left-3 top-3">Rs</span>
+
+<input id="amount" type="number"
+class="w-full pl-10 px-4 py-3 border rounded-lg"
+placeholder="100">
+
+</div>
+
+</div>
+
+
+<button onclick="processPayment()"
+class="daraz-bg text-white w-full py-4 rounded-lg text-lg font-semibold">
+
+Recharge Now
+
+</button>
+
+
+</div>
+
+</div>
+
+</main>
+
+
+<footer class="bg-gray-800 text-white text-center py-8 mt-12">
+© 2025 Daraz Load
+</footer>
+
+
+
+<script>
+
+function processPayment(){
+
+let number=document.getElementById("number").value
+let provider=document.getElementById("provider")
+let amount=document.getElementById("amount").value
+
+if(!number) return alert("Enter mobile number")
+
+if(!provider.value) return alert("Select network")
+
+if(!amount) return alert("Enter amount")
+
+
+document.getElementById("successNumber").textContent=number
+
+document.getElementById("successCompany").textContent=
+provider.options[provider.selectedIndex].text
+
+document.getElementById("successAmount").textContent=
+"Rs "+parseFloat(amount).toLocaleString()
+
+document.getElementById("successRef").textContent=
+"LD"+Math.floor(Math.random()*1000000000)
+
+
+document.getElementById("successOverlay").style.display="flex"
+
+}
+
+
+function closeSuccess(){
+
+document.getElementById("successOverlay").style.display="none"
+
+}
+
+</script>
+
+</body>
+</html>
